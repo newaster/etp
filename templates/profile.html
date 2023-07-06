@@ -1,0 +1,105 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>PROFILE</h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                    
+                </div>
+            </div>
+        </div> 
+        <div class="container-fluid">
+            <div class="row clearfix">
+                <div class="col-lg-4 col-md-12">
+                    <div class="card mcard_3">
+                        <div class="body">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                            <a href="/profile">
+                            <img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'assets/images/profile_av.jpg' %}{% endif %}" class="rounded-circle shadow "  alt="Profile Picture" width="150px" height="150px">
+                            </a>                            
+                            <input type="file" id="profile-picture" name="profile_picture" style="display: none;">
+
+                            <a href="javascript:void(0);" id="select-picture-button" class="btn btn-info btn-icon float-right"><i class="zmdi zmdi-edit"></i></a>
+
+                            <button type="submit" id="submit-button" style="display: none;"></button>
+
+                            </a>
+                            </form>
+
+                            <h4 class="m-t-10">{{ request.user.first_name }} {{ request.user.last_name }}</h4>                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <p class="text-muted">Quota : {{ request.user.user_addon.quota }}</p>
+                                </div>                           
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="body">
+                            <small class="text-muted">Username: </small>
+                            <p>{{ request.user.username }}</p>
+                            <hr>
+                            <small class="text-muted">Email address: </small>
+                            <p>{{ request.user.email }}</p>
+                            <hr>
+                            <small class="text-muted">Phone: </small>
+                            <p>{{ request.user.user_addon.mobileno }}</p>
+                            <hr>
+                            <small class="text-muted">Company Name: </small>
+                            <p>{{ request.user.user_addon.company_name  }}</p>
+                            <hr>
+                            <small class="text-muted">Location: </small>
+                            <p>{{ request.user.user_addon.location  }}</p>
+                            <hr>
+                            <small class="text-muted">Role: </small>
+                            <p>{{ request.user.user_addon.role  }}</p>
+                        </div>
+                    </div>                    
+                </div>
+                <div class="col-lg-8 col-md-12">
+                    <div class="card">
+                        <div class="body">
+                            
+                            <div>
+                                <img src="{% static 'assets/machine.png' %}" alt="ETP Panel" width="60%" style="display: block; margin: 0 auto;" class="shadow">
+                            </div>
+                            <hr>
+                                                     
+                            <h4 class="m-t-15">ETP Panel</h4>                            
+                            <small class="text-muted">Overall Size: </small>
+                            <p>625 (H) x 350 (V) x 130 (D) mm</p>
+                            <hr>
+                            <small class="text-muted">Influent Transfer Pump (1W + 1S): </small>
+                            <p>5 hp 3Ф</p>
+                            <hr>
+                            <small class="text-muted">Air Blower (1W + 1S): </small>
+                            <p>10 hp 3Ф</p>
+                            <hr>
+                            <small class="text-muted">Filter Feed Pump (1W + 1S): </small>
+                            <p>5 hp 3Ф</p>
+                            <hr>
+                            <small class="text-muted">Sludge Drain Pump (1W + 1S): </small>
+                            <p>5 hp 3Ф</p>
+                            <hr>
+                            <small class="text-muted">Spare Pump (1W): </small>
+                            <p>5 hp 3Ф</p>
+                        </div>
+                    </div>
+              
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

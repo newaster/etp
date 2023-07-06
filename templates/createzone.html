@@ -1,0 +1,85 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+    {% if edit %}
+         Edit Zone
+    {% else %}
+         Create Zone
+    {% endif %}
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>
+                        {% if edit %}
+                            Edit Zone
+                        {% else %}
+                            Create Zone
+                        {% endif %}
+                    </h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div> 
+        <div class="container-fluid">
+            <!-- Input -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">                    
+                    <div class="card">
+                        <div class="body">
+                            
+                            <form method="POST" {% if edit %}action="/editzone/{{ ez.id }}"{% endif %}>
+                                {% csrf_token %}
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Zone Name</label>
+                                    <div class="form-group">                                    
+                                        <input type="text" class="form-control" placeholder="Enter Zone Name" name="zonename" value="{{ ez.zname }}" />                                   
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Add Site to Zone</label>                                                              
+                                    <p style="color:red;">Select the sites you want to add to Zone</p>
+                                    <select class="form-control show-tick ms select2" multiple data-placeholder="Select" name="sites">
+                                        {% for i in nos %}
+                                            <option {% if i.name in ez.zid %}selected{% endif %} value="{{ i.smno }}-{{ i.name }}">{{ i.name }}-{{ i.smno }}</option>
+                                        {% endfor %}
+                                    </select>                              
+                                </div>
+
+                            </div>
+
+                        
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group">                                    
+                                        <input type="submit" class="btn btn-warning" value="{% if edit %}Update{% else %}Create{% endif %}"  />                                   
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+{% endblock %}

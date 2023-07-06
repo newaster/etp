@@ -1,0 +1,126 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+    Fault Report
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>Fault Report</h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div> 
+
+<form method="POST">
+    {% csrf_token %}
+            <div class="row clearfix">
+                
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card">
+                                <div class="header">
+                                        <h2> <strong>Select</strong> Site</h2>
+                                        <br>
+                                <div class="body">
+                                    <div class="row clearfix">
+
+                                            <div class="col-sm-3">                                    
+                                                <select class="form-control show-tick ms select2" data-placeholder="Select" name="siteid">
+                                                    <option>Select</option>
+                                                    {% for i in site %}
+                                                        <option value="{{ i.smno }}">{{ i.smno }}::{{i.name}}</option>
+                                                    {% endfor %}
+                                                
+                                                </select>
+                                            </div>
+                                            <div col-sm-3>
+                                                <input type="date" class="btn btn-danger" name="fromdate">
+                                            </div>
+                                            <div col-sm-3>
+                                                <input type="date" class="btn btn-warning " name="todate">
+                                            </div>
+
+                                            <div col-sm-3>
+                                                <input type="submit" value="Search" class="btn btn-info">
+                                            </div>
+                                            
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+            </div>
+</form> 
+
+
+
+        <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2><strong>Download </strong> Report </h2>
+                            <div col-sm-3>
+                                <button class="btn btn-success"onclick="generatePDF()">Download PDF</button>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                    <thead>
+                                        <tr>
+                                            <th>Serial Number</th>
+                                            <th>Name</th>
+                                            <th>Number</th>
+                                            <th>Fault</th>
+                                            <th>Date & Time</th>                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% if post or g %}
+                                        {% for item in fr|dictsort:"dnt" %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ item.site.name }}</td>
+                                                <td>{{ item.site.smno }}</td>
+                                                <td>{{ item.fname }}</td>
+                                                <td>{{ item.dnt }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        {% else %}
+                                            {% for i in fr %}
+                                            {% for item in i|dictsort:"dnt" %}
+                                                <tr>
+                                                    <td>{{ forloop.parentloop.counter }}</td>
+                                                    <td>{{ item.site.name }}</td>
+                                                    <td>{{ item.site.smno }}</td>
+                                                    <td>{{ item.fname }}</td>
+                                                    <td>{{ item.dnt }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            {% endfor %}
+
+                                        {% endif %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                
+
+    </div>
+</section>
+
+{% endblock %}

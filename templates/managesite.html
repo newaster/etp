@@ -1,0 +1,91 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+    Manage Site
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>Manage Site</h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div> 
+        <div class="container-fluid">
+            <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2><strong>Download </strong> Report</h2>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                    <thead>
+                                        <tr>
+                                            <th>SNo.</th>
+                                            <th>Name</th>
+                                            <th>Number</th>
+                                            <th>Status</th>
+                                            <th>Pump Capacity</th>
+                                            <th>Days Left</th>                                            
+                                            <th>Expiry Date</th>
+                                            <th> </th>                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                          {% for item in ms %}
+                                            <tr>
+                                              <td>{{ forloop.counter }}</td>
+                                              <td>{{ item.name }}</td>
+                                              <td>{{ item.smno }}</td>
+                                              <td>{{ item.status }}</td>
+                                              <td>{{ item.opc }} LPS </td>    
+                                              <td id="time-difference-{{ forloop.counter }}"> </td>
+
+                                              <td>{{ item.vd }}</td>                                            
+                                              <td>                                              
+
+                                                <a href="/renewsite/{{ item.id }}"><input type="submit" value="Renew" class="btn btn-success" id="renew-btn-{{ forloop.counter }}"/></a>
+                                                <a href="/editsite/{{ item.id }}"><input type="submit" value="Edit" class="btn btn-danger" /></a>
+      
+                                              </td>
+                                            </tr>
+                                            <script>
+                                              var ud{{ forloop.counter }} = new Date("{{ item.ud|date:'Y-m-d H:i:s' }}");
+                                              var vd{{ forloop.counter }} = new Date("{{ item.vd|date:'Y-m-d H:i:s' }}");
+                                              var timeDifference{{ forloop.counter }} = Math.abs(ud{{ forloop.counter }} - vd{{ forloop.counter }});
+                                              var daysDifference{{ forloop.counter }} = Math.floor(timeDifference{{ forloop.counter }} / (1000 * 60 * 60 * 24));
+                                              document.getElementById("time-difference-{{ forloop.counter }}").textContent = daysDifference{{ forloop.counter }};
+
+                                              if (daysDifference{{ forloop.counter }} > 5) {
+                                                    document.getElementById("renew-btn-{{ forloop.counter }}").style.display = "none";
+                                                  }
+                                              
+                                            </script>
+                         
+                                          {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+{% endblock %}

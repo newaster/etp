@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>New Maintenance Ticket</title>
+    <style>
+        body {
+            text-align:left;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f4f6;
+            color: #000000;
+            font-family: 'Helvetica', Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 24px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .footer {
+            background-color: #000000;
+            padding: 20px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .unsubscribe {
+            font-size: 12px;
+            margin-top: 30px;
+        }
+
+        .unsubscribe a {
+            text-decoration: underline;
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>New Site Added to your Account!!</h2>
+        <h4>SITENAME: {{ s.name }}</h4>
+        <h4>SMNO: {{ s.smno }}</h4>
+        <p>Hello {{ u.first_name }}  {{ u.last_name }},</p>
+        <p>This email is to inform you that your new site have been added for your ETP Machine. Explore the dashboard now for more details.</p>
+        <p>Dahboard Link: www.etp.embarkrms.com</p>
+        
+        <p>Location : {{ s.lat }}°N,{{ s.lon }}°E</p>
+        <p>City : {{ s.city }}</p>
+        <p>Current Status : {{ s.status }}</p>
+        <p>Caretaker Email : {{ s.techemail }}</p>
+        <p>Caretaker Mobile no : {{ s.techno }}</p>
+        <p>Output Pump Capacity : {{ s.opc }} LPS</p>
+        <h4>Validity: {{ s.vd }}</h4>
+
+        <p>To change any details please contact support @7276003731</p>
+        <p>Thank You</p><br>
+        <small style="color: red;">*This is automatic generated mail please don't reply.</small>
+       
+    </div>
+</body>
+
+</html>

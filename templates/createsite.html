@@ -1,0 +1,190 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+    {% if edit %}
+         Edit Site
+    {% else %}
+         Create Site
+    {% endif %}
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>
+                        {% if edit %}
+                            Edit Site
+                        {% else %}
+                            Create Site
+                        {% endif %}
+                    </h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div> 
+        <div class="container-fluid">
+            <!-- Input -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">                    
+                    <div class="card">
+                        <div class="body">
+                            
+                            <form method="POST" {% if edit %}action="/editsite/{{ es.id }}"{% endif %}>
+                                {% csrf_token %}
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Site Name</label>
+                                    <div class="form-group">                                    
+                                        <input type="text" class="form-control" placeholder="Enter Site Name" name="sitename" value="{{ es.name }}" />                                   
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Modem Number</label>
+                                    <div class="form-group">                                   
+                                        <input type="text" class="form-control" placeholder="Enter Modem Number" name="smno" 
+                                        value="{{ es.smno }}"  {% if edit %} disabled {% endif %} maxlength="10"/>                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Latitude</label>
+                                    <div class="form-group">                                    
+                                        <input type="text" class="form-control" placeholder="Enter Latitude" name="lat"
+                                        value="{{ es.lat }}"/>                                   
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Longitude</label>
+                                    <div class="form-group">                                   
+                                        <input type="text" class="form-control" placeholder="Enter Longitude" name="lon" 
+                                        value="{{ es.lon }}"/>                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>City</label>
+                                    <div class="form-group">                                    
+                                        <input type="text" class="form-control" placeholder="Enter City" name="city"
+                                        value="{{ es.city }}"/>                                   
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Status</label>
+                                    <div class="form-group">
+                                          <select class="form-control show-tick ms select2" data-placeholder="Select"  name="status" required>
+                                            
+                                            <option value="active" {% if es.status == 'active' %}selected{% endif %}>Active</option>
+                                            <option value="inactive" {% if es.status == 'inactive' %}selected{% endif %}>Inactive</option>
+                                          </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <label>Pump Capacity (In LPS)</label>
+                                    <div class="form-group">                                    
+                                        <input type="number" class="form-control" placeholder="Enter Output Pump Capacity" name="opc" value="{{ es.opc }}"/>                                   
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Technician Phone Number</label>
+                                    <div class="input-group masked-input mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="zmdi zmdi-phone"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control mobile-phone-number" placeholder="Ex:XXX-XXX-XXXX" name="phone" value="{{ es.techno }}">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Technician Email Address</label>
+                                    <div class="input-group masked-input mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="zmdi zmdi-email"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control email" placeholder="Ex: example@astertechnologies.in" name="email" value="{{ es.techemail }}">
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <hr>
+                            {% if not edit %}
+                            <div class="row clearfix">
+                                  <div class="col-sm-3">
+                                    <label style="color:red;">Add this site to Zone</label></div>
+                                    <div class="form-group col-sm-3">
+                                      <select class="form-control show-tick ms select2" id="zdropdown" name="zdropdown" onchange="toggleZoneName()" required>
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                        
+                                      </select>
+                                    </div>
+                                  
+                                  <div class="col-sm-6">
+                                    <label>Select Your Zone</label>
+                                    <div class="form-group">
+                                      <select class="form-control show-tick ms select2" placeholder="Add Zone Name" id="zname" name="zname" disabled >
+                                        {% for i in zo %}
+
+                                            <option value="{{ i.id }}">{{ i.zname }}</option>
+
+                                        {% endfor %}
+
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <script>
+                                  function toggleZoneName() {
+                                    var dropdown = document.getElementById("zdropdown");
+                                    var zoneNameInput = document.getElementById("zname");
+                                    
+                                    if (dropdown.value === "yes") {
+                                      zoneNameInput.disabled = false;
+                                    } else {
+                                      zoneNameInput.disabled = true;
+                                    }
+                                  }
+                                </script>
+
+                            {% endif %}
+
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group">                                    
+                                        <input type="submit" class="btn btn-warning" value="{% if edit %}Update{% else %}Create{% endif %}"  />                                   
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+{% endblock %}

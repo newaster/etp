@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} {{ request.user.user_addon.role }} Dashboard {% endblock %}
+
+
+
+{% block notification %}
+    {% for i in faults %}
+                        <li>
+                            <a href="javascript:void(0);">
+                                <div class="icon-circle bg-blue"><i class="zmdi zmdi-block"></i></div>
+                                <div class="menu-info">
+                                    <h4>{{ i.fname }}</h4>
+                                    <p>{{ i.site.smno }}-{{ i.dnt }}</p>
+                                </div>
+                            </a>
+                        </li>
+    {% endfor %}
+{% endblock %}
+
+{% block lmenu %}
+
+{% if request.user.user_addon.role == 'user' %}
+
+
+			<li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment"></i><span>Site Setup</span></a>
+                <ul class="ml-menu">
+                    <li><a href="/createsite/">Create Site</a></li>
+                    <li><a href="/managesite/">Manage Site</a></li>
+                </ul>
+			</li>
+            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>User Setup</span></a>
+                <ul class="ml-menu">
+                    <li><a href="/createuser/">Create User</a></li>
+                    <li><a href="/manageuser/">Manage User</a></li>
+                </ul>
+            </li>
+            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-blogger"></i><span>Zone Setup</span></a>
+                <ul class="ml-menu">
+                    <li><a href="/createzone/">Create Zone</a></li>
+                    <li><a href="/managezone/">Manage Zone</a></li>
+                </ul>
+            </li>
+            <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-shopping-cart"></i><span>Tickets</span></a>
+                <ul class="ml-menu">
+                    <li><a href="/createticket/">Create Ticket</a></li>
+                    <li><a href="/manageticket/">Manage Ticket</a></li>
+                </ul>
+            </li>
+{% elif request.user.user_addon.role == 'admins' %}
+<li> <a href="/approval/"><i class="zmdi zmdi-folder"></i><span>Approve New User</span></a></li>
+<li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>User Setup</span></a>
+                <ul class="ml-menu">
+                    <li><a href="/manageuser/">Manage User</a></li>
+                </ul>
+</li>
+
+{% elif request.user.user_addon.role == 'guest' %}
+
+
+
+
+{% endif %}
+
+{% endblock %}
+
+{% block maincontent %}
+
+<section class="content">
+            <div class="block-header">
+                <div class="row">
+                    <div class="col">
+                        <h2>Dashboard</h2>
+                        <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                    </div>
+                    <div class="col">
+                        
+                    </div>
+                    <div class="col">
+                        <form method="POST"  id="search-form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    <select class="form-control show-tick ms select2" data-placeholder="Select" name="siteid" onchange="submitForm()">
+                                        <option>Select</option>
+                                        {% for i in site %}
+                                        <option value="{{ i.smno }}">{{ i.smno }}::{{i.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <script>
+                        function submitForm() {
+                            document.getElementById("search-form").submit();
+                        }
+                    </script>
+
+                    <div class="col">
+                        <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+
+
+
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card mcard_4">                              
+                        <div id="demo3" class="carousel slide" data-ride="carousel">            
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div id="chart-pie1" class="c3_chart"></div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div id="chart-pie2" class="c3_chart"></div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div id="chart-pie3" class="c3_chart"></div>
+                                </div>
+                            </div>
+                        </div>   
+                                    
+            </div>
+            <!-- Controls -->
+            <a class="carousel-control-prev" href="#demo3" data-slide="prev"><span class="carousel-control-prev-icon danger"></span></a>
+            <a class="carousel-control-next" href="#demo3" data-slide="next"><span class="carousel-control-next-icon danger"></span></a> 
+            <div><h5 align="center"><strong>CURRENT</strong> RATIO</h5></div>
+        </div>    
+
+        <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="card w_data_1">
+                <div class="bod">
+                    <div class="w_icon pink"><i class="zmdi zmdi-power"></i></div>
+                    <h5 class="mt-3 mb-0">{{ latest.name }}</h5>
+                    <span class="text-muted">Last Online</span>
+                    <div class="w_description text-danger">
+                        <i class="zmdi zmdi-alert-polygon"></i>
+                        <span>{{ latest.dnt}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card w_data_1">
+                <div class="bod">
+                    <div class="w_icon cyan"><i class="zmdi zmdi-wrench"></i></div>
+                    <h4 class="mt-3 mb-1">{{ latest.nobkwsh }}</h4>
+                    <span class="text-muted">No of Backwash</span>
+                    <div class="w_description text-danger">
+                        <i class="zmdi zmdi-alert-triangle"></i>
+                        <span><b> Validity : </b>
+                               
+
+                                {% for s in site %}
+                                    {% if s.smno == latest.smno %}
+                                        {{ s.vd }} 
+                                    {% endif %}
+                                {% endfor %}
+
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div>
+                
+                    <div class="header">
+                        <h5><strong>PUMP</strong> FAULTS</h5>
+                    </div>
+                    <div class="body">
+                        <div id="chart-employment" class="c3_chart"></div>
+                    </div>
+                
+            </div>
+        </div>
+    </div>
+<hr>
+<div class="container-fluid">
+        <div>
+            <h6 class="header"><strong>PUMP</strong> Operating Hours</h6>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>
+                            <h5>{{ bardict.sum_value1 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-yellow"></i> ITP 1</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#FFC107">{{ bardict2.itp1ophr.0 }},{{ bardict2.itp1ophr.1 }},{{ bardict2.itp1ophr.2 }},{{ bardict2.itp1ophr.3 }},{{ bardict2.itp1ophr.4 }},{{ bardict2.itp1ophr.5 }},{{ bardict2.itp1ophr.6 }},{{ bardict2.itp1ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>                                
+                            <h5>{{ bardict.sum_value3 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-blue"></i> FFP 1</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#46b6fe">{{ bardict2.ffp1ophr.0 }},{{ bardict2.ffp1ophr.1 }},{{ bardict2.ffp1ophr.2 }},{{ bardict2.ffp1ophr.3 }},{{ bardict2.ffp1ophr.4 }},{{ bardict2.ffp1ophr.5 }},{{ bardict2.ffp1ophr.6 }},{{ bardict2.ffp1ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>
+                            <h5>{{ bardict.sum_value7 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-pink"></i> BLOWER 1</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#ee2558">{{ bardict2.blwr1ophr.0 }},{{ bardict2.blwr1ophr.1 }},{{ bardict2.blwr1ophr.2 }},{{ bardict2.blwr1ophr.3 }},{{ bardict2.blwr1ophr.4 }},{{ bardict2.blwr1ophr.5 }},{{ bardict2.blwr1ophr.6 }},{{ bardict2.blwr1ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>                            
+                            <h5>{{ bardict.sum_value5 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-green"></i> STP 1</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#04BE5B">{{ bardict2.stp1ophr.0 }},{{ bardict2.stp1ophr.1 }},{{ bardict2.stp1ophr.2 }},{{ bardict2.stp1ophr.3 }},{{ bardict2.stp1ophr.4 }},{{ bardict2.stp1ophr.5 }},{{ bardict2.stp1ophr.6 }},{{ bardict2.stp1ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>
+                            <h5>{{ bardict.sum_value2 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-yellow"></i> ITP 2</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#FFC107">{{ bardict2.itp2ophr.0 }},{{ bardict2.itp2ophr.1 }},{{ bardict2.itp2ophr.2 }},{{ bardict2.itp2ophr.3 }},{{ bardict2.itp2ophr.4 }},{{ bardict2.itp2ophr.5 }},{{ bardict2.itp2ophr.6 }},{{ bardict2.itp2ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>                                
+                            <h5>{{ bardict.sum_value4 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-blue"></i> FFP 2</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#46b6fe">{{ bardict2.ffp2ophr.0 }},{{ bardict2.ffp2ophr.1 }},{{ bardict2.ffp2ophr.2 }},{{ bardict2.ffp2ophr.3 }},{{ bardict2.ffp2ophr.4 }},{{ bardict2.ffp2ophr.5 }},{{ bardict2.ffp2ophr.6 }},{{ bardict2.ffp2ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>
+                            <h5>{{ bardict.sum_value8 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-pink"></i> BLOWER 2</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#ee2558">{{ bardict2.blwr2ophr.0 }},{{ bardict2.blwr2ophr.1 }},{{ bardict2.blwr2ophr.2 }},{{ bardict2.blwr2ophr.3 }},{{ bardict2.blwr2ophr.4 }},{{ bardict2.blwr2ophr.5 }},{{ bardict2.blwr2ophr.6 }},{{ bardict2.blwr2ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card state_w1">
+                    <div class="body d-flex justify-content-between">
+                        <div>                            
+                            <h5>{{ bardict.sum_value6 }} hr</h5>
+                            <span><i class="zmdi zmdi-toys zmdi-hc-spin col-green"></i> STP 2</span>
+                        </div>
+                        <div class="sparkline" data-type="bar" data-width="97%" data-height="55px" data-bar-Width="3" data-bar-Spacing="5" data-bar-Color="#04BE5B">{{ bardict2.stp2ophr.0 }},{{ bardict2.stp2ophr.1 }},{{ bardict2.stp2ophr.2 }},{{ bardict2.stp2ophr.3 }},{{ bardict2.stp2ophr.4 }},{{ bardict2.stp2ophr.5 }},{{ bardict2.stp2ophr.6 }},{{ bardict2.stp2ophr.7 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+    <div class="row clearfix">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>Flow</strong> Rate</h2>
+                    <ul class="header-dropdown">
+                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
+                            <ul class="dropdown-menu dropdown-menu-right slideUp">
+                                <li><a href="javascript:void(0);">Edit</a></li>
+                                <li><a href="javascript:void(0);">Delete</a></li>
+                                <li><a href="javascript:void(0);">Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="remove">
+                            <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="body">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-6 col-sm-12">
+                            <div id="chart-area-step" class="c3_chart d_traffic"></div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <span> More than 30% percent of users come from direct links. Check details page for more information.</span>
+                            <div class="progress mt-4">
+                                <div class="progress-bar l-amber" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%;"></div>
+                            </div>
+                            <div class="d-flex bd-highlight mt-4">                                
+                                <div class="flex-fill bd-highlight">
+                                    <h5 class="mb-0">21,521 <i class="zmdi zmdi-long-arrow-up"></i></h5>
+                                    <small>Today</small>
+                                </div>
+                                <div class="flex-fill bd-highlight">
+                                    <h5 class="mb-0">%12.35 <i class="zmdi zmdi-long-arrow-down"></i></h5>
+                                    <small>Last month %</small>
+                                </div>
+                            </div>
+                        </div>                                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+   
+    <div class="row clearfix">
+            <div class="col-lg-12">
+                
+            </div>
+    </div>
+        
+    <div class="row clearfix">
+            <div class="col-md-12 col-lg-8">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Plant</strong>Location</h2>
+                          <div class="body text-center">
+                                <div id="india" style="height: 400px"></div>
+                        </div>                    
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="card" id="plant-card">
+                    <div class="header">
+                        <h2><strong>Plant Status</strong></h2>
+                    </div>
+                    <div class="body text-center">
+                        <div id="chart-donut" class="c3_chart"></div>
+                        <button class="btn btn-primary mt-4 mb-4" onclick="flipCard()">View More</button>                            
+                    </div>
+                    <!--<div class="back">
+                        <h2>Last Online</h2>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+
+
+
+
+
+</section>
+
+
+
+
+{% endblock %}

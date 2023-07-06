@@ -1,0 +1,260 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+    Plant Report
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>Plant Report</h2>
+
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+<form method="POST">
+    {% csrf_token %}
+            <div class="row clearfix">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="card">
+                                <div class="header">
+                                        <h2> <strong>Select</strong> Site</h2>
+                                        <br>
+                                <div class="body">
+                                    <div class="row clearfix">
+
+                                            <div class="col-sm-3">
+                                                <select class="form-control show-tick ms select2" data-placeholder="Select" name="siteid">
+                                                    <option>Select</option>
+                                                    {% for i in site %}
+                                                        <option value="{{ i.smno }}">{{ i.smno }}::{{i.name}}</option>
+                                                    {% endfor %}
+
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="date" class="btn btn-danger" name="fromdate">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <input type="date" class="btn btn-warning " name="todate">
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <input type="submit" value="Search" class="btn btn-info">
+                                            </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+</form>
+
+        <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2><strong>Download </strong> Report </h2>
+                            <div col-sm-3>
+                                <button class="btn btn-success"onclick="generatePDF()">Download PDF</button>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table  id="myTable" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                    <thead>
+
+                                        <tr>
+                                            <th>SNo.</th>
+                                            <th>Data Received-Time</th>
+                                            <th>Name</th>
+                                            <th>Number</th>
+                                            <th>Flow Rate (m3/hr)</th>
+                                            <th>Totaliser (m3)</th>
+                                            <th colspan="2">ITP Current (A) </th>
+                                            <th colspan="2">ITP Operating Hours (Hr) </th>
+                                            <th colspan="2">FFP Current (A)</th>
+                                            <th colspan="2">FFP Operating Hours (Hr)</th>
+                                            <th colspan="2">Blower Current (A)</th>
+                                            <th colspan="2">Blower Operating Hours (Hr)</th>
+                                            <th colspan="2">STP Current (A)</th>
+                                            <th colspan="2">STP Operating Hours (Hr)</th>
+                                        </tr>
+
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>1</th>
+                                            <th>2</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if post %}
+
+                                        {% for item in pr|dictsort:"tot" %}
+
+                                        <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ item.dnt }}</td>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.smno }}</td>
+                                                <td>{{ item.flowvalue }}</td>
+                                                <td>{{ item.tot }}</td>
+                                                <td>{{ item.itp1c }}</td>
+                                                <td>{{ item.itp2c }}</td>
+                                                <td>{{ item.itp2ophr }}</td>
+                                                <td>{{ item.itp1ophr }}</td>
+                                                <td>{{ item.ffp1c }}</td>
+                                                <td>{{ item.ffp2c }}</td>
+                                                <td>{{ item.ffp2ophr }}</td>
+                                                <td>{{ item.ffp1ophr }}</td>
+                                                <td>{{ item.bwlr1c }}</td>
+                                                <td>{{ item.bwlr2c }}</td>
+                                                <td>{{ item.blwr2ophr }}</td>
+                                                <td>{{ item.blwr1ophr }}</td>
+                                                <td>{{ item.stp1c }}</td>
+                                                <td>{{ item.stp2c }}</td>
+                                                <td>{{ item.stp2ophr }}</td>
+                                                <td>{{ item.stp1ophr }}</td>
+                                        </tr>
+                                        {% endfor %}
+
+                                        {% else %}
+
+
+                                        {% for i in pr %}
+                                        {% for item in i|dictsort:"tot" %}
+
+
+
+                                            <tr>
+                                                <td>{{ forloop.parentloop.counter }}</td>
+                                                <td>{{ item.dnt }}</td>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.smno }}</td>
+                                                <td>{{ item.flowvalue }}</td>
+                                                <td>{{ item.tot }}</td>
+                                                <td>{{ item.itp1c }}</td>
+                                                <td>{{ item.itp2c }}</td>
+                                                <td>{{ item.itp2ophr }}</td>
+                                                <td>{{ item.itp1ophr }}</td>
+                                                <td>{{ item.ffp1c }}</td>
+                                                <td>{{ item.ffp2c }}</td>
+                                                <td>{{ item.ffp2ophr }}</td>
+                                                <td>{{ item.ffp1ophr }}</td>
+                                                <td>{{ item.bwlr1c }}</td>
+                                                <td>{{ item.bwlr2c }}</td>
+                                                <td>{{ item.blwr2ophr }}</td>
+                                                <td>{{ item.blwr1ophr }}</td>
+                                                <td>{{ item.stp1c }}</td>
+                                                <td>{{ item.stp2c }}</td>
+                                                <td>{{ item.stp2ophr }}</td>
+                                                <td>{{ item.stp1ophr }}</td>
+                                        </tr>
+
+                                            {% endfor %}
+                                            {% endfor %}
+
+                                        {% endif %}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+
+<script>
+    function generatePDF() {
+      const table = document.getElementById('myTable');
+
+      // Convert the table to a canvas using html2canvas
+      html2canvas(table).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jspdf.jsPDF();
+
+        // Customize the PDF layout as needed
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const contentWidth = pdfWidth - 10; // Adjust the content width as needed
+
+        // Header Photo
+        const headerPhotoWidth = 50;
+        const headerPhotoHeight = 25;
+        const headerPhotoX = 5;
+        const headerPhotoY = 5;
+        const headerPhotoPath = "{% static 'images/header.png' %}";
+        pdf.addImage(headerPhotoPath, "PNG", headerPhotoX, headerPhotoY, headerPhotoWidth, headerPhotoHeight);
+
+        // Footer Photo
+        const footerPhotoWidth = 150;
+        const footerPhotoHeight = 25;
+        const footerPhotoX = pdfWidth - footerPhotoWidth - 40;
+        const footerPhotoY = pdfHeight - footerPhotoHeight ;
+        const footerPhotoPath = "{% static 'images/footer.png' %}";
+        pdf.addImage(footerPhotoPath, "PNG", footerPhotoX, footerPhotoY, footerPhotoWidth, footerPhotoHeight);
+
+        // Header Text
+        pdf.setFontSize(14);
+        const title = document.title;
+        pdf.text(title, headerPhotoX + headerPhotoWidth + 40, headerPhotoY + headerPhotoHeight / 2);
+
+
+
+        // Content (Table)
+        const imageWidth = contentWidth;
+        const imageHeight = (imageWidth / canvas.width) * canvas.height;
+        const contentHeight = pdfHeight - 30 - imageHeight - 20; // Adjust the spacing and heights as needed
+
+        pdf.addImage(imgData, 'PNG', (pdfWidth - imageWidth) / 2, 40, imageWidth, imageHeight); // Position and size the image
+
+        // Download the PDF file
+        pdf.save(title+'.pdf');
+      });
+    }
+
+    // Trigger the PDF generation when a button is clicked
+    document.getElementById('generateButton').addEventListener('click', generatePDF);
+</script>
+
+{% endblock %}

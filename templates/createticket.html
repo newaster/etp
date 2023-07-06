@@ -1,0 +1,124 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+    {% if edit %}
+         Edit Ticket
+    {% else %}
+         Create Ticket
+    {% endif %}
+{% endblock %}
+{% block maincontent %}
+
+<section class="content">
+    <div class="body_scroll">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-7 col-md-6 col-sm-12">
+                    <h2>
+                        {% if edit %}
+                            Edit Ticket
+                        {% else %}
+                            Create Ticket
+                        {% endif %}
+                    </h2>
+           
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-12">                
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
+                </div>
+            </div>
+        </div> 
+        <div class="container-fluid">
+            <!-- Input -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">                    
+                    <div class="card">
+                        <div class="body">
+                            
+                            <form method="POST" {% if edit %}action="/editticket/{{ et.id }}"{% endif %}>
+                                {% csrf_token %}
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Caretaker Name</label>
+                                    <div class="form-group">                                    
+                                        <input type="text" class="form-control" placeholder="Enter Site Name" name="cname" value="{{ et.name }}" />                                   
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Site</label>
+                                    <div class="form-group">
+                                          <select class="form-control show-tick ms select2" data-placeholder="Select" required name="site">
+                                            {% for i in s %}
+                                            <option value="{{ i.id }}" {% if i.name in et.site.name %}selected{% endif %}>{{ i.name }}::{{ i.smno }}</option>
+                                            {% endfor %}
+                                          </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Technician Phone Number</label>
+                                    <div class="input-group masked-input mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="zmdi zmdi-phone"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control mobile-phone-number" placeholder="Ex:XXX-XXX-XXXX" name="phone" value="{{ et.techno }}" maxlength="10">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Technician Email Address</label>
+                                    <div class="input-group masked-input mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="zmdi zmdi-email"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control email" placeholder="Ex: example@astertechnologies.in" name="email" value="{{ et.techemail }}">
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="row clearfix">
+                                <div class="col-sm-6">
+                                    <label>Maintenance Time</label>
+                                    <div class="input-group">
+                                        
+                                        <input type="time" class="form-control timepicker" placeholder="Please choose a time" name="time">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label>Maintenance Date</label>
+                                    <div class="input-group">
+                                        
+                                        <input type="date" class="form-control datetimepicker" placeholder="Please choose date" name="date">
+                                    </div>
+                                </div>
+                            </div>
+
+                                                
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group">                                    
+                                        <input type="submit" class="btn btn-warning" value="{% if edit %}Update{% else %}Create{% endif %}"  />                                   
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+{% endblock %}
