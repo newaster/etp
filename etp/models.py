@@ -89,9 +89,12 @@ class zones(models.Model):
 
 
 class fault(models.Model):
+	class Meta():
+		unique_together = ('site', 'dnt')
+
 	site=models.ForeignKey(site, on_delete=models.CASCADE)
 	fname= models.CharField(max_length=100)
-	dnt=models.DateTimeField(auto_now_add=True)
+	dnt=models.DateField(auto_now_add=True)
 
 class ticket(models.Model):
 

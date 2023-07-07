@@ -21,7 +21,21 @@ from django.utils.html import strip_tags
 import base64
 import os 
 
+def viewraw(request):
+    with open('etpraw.txt', 'r') as fp:
+        lines = fp.readlines()
 
+    last_5000_records = lines[-5000:][::-1]
+
+    return render(request,'viewdata.html',{'context': last_5000_records})
+
+def viewpolish(request):
+    with open('etppolished.txt', 'r') as fp:
+        lines = fp.readlines()
+
+    last_5000_records = lines[-5000:][::-1]
+
+    return render(request,'viewdata.html',{'context': last_5000_records})
 
 
 
@@ -40,12 +54,15 @@ def logout_call(request):
 def newetp(request):
     if request.method == 'POST':
         nd= request.POST.get('Data')
+        with open('etpraw.txt', 'a') as fp:
+            fp.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} -- {dict_data}\n")
+
         if nd[-1]=='e':
             dict_data=nd
         else:
             dict_data=data_parse(nd)
         remote_addr = request.META.get('REMOTE_ADDR')
-        with open('newetp.txt', 'a') as fp:
+        with open('etppolished.txt', 'a') as fp:
             fp.write(f" {remote_addr}-- {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} -- {dict_data}\n")
 
         ef = etpflow(smno=dict_data['smno'], name=dict_data['name'], fstatus=dict_data['fstatus'], ib=dict_data['ib'], ob=dict_data['ob'], etp=dict_data['etp'], obh=dict_data['obh'], flowvalue=float(dict_data['flowvalue']), tot=float(dict_data['tot']), itp1=dict_data['itp1'], itp2=dict_data['itp2'], ffp1=dict_data['ffp1'], ffp2=dict_data['ffp2'], b1=dict_data['b1'], b2=dict_data['b2'], stp1=dict_data['stp1'], stp2=dict_data['stp2'], pos=dict_data['pos'], nop=dict_data['nop'], itpr=float(dict_data['itpr']), ffpr=float(dict_data['ffpr']), blwrr=float(dict_data['blwrr']), stpr=float(dict_data['stpr']), itpc=float(dict_data['itpc']),itp1c=float(dict_data['itp1c']),itp2c=float(dict_data['itp2c']), ffpc=float(dict_data['ffpc']),ffp1c=float(dict_data['ffp1c']),ffp2c=float(dict_data['ffp2c']), bwlrc=float(dict_data['bwlrc']),bwlr1c=float(dict_data['bwlr1c']),bwlr2c=float(dict_data['bwlr2c']), stpc=float(dict_data['stpc']),stp1c=float(dict_data['stp1c']),stp2c=float(dict_data['stp2c']), mpv=float(dict_data['mpv']), nobkwsh=float(dict_data['nobkwsh']), itpophr=float(dict_data['itpophr']),itp1ophr=float(dict_data['itp1ophr']),itp2ophr=float(dict_data['itp2ophr']), ffpophr=float(dict_data['ffpophr']),ffp1ophr=float(dict_data['ffp1ophr']),ffp2ophr=float(dict_data['ffp2ophr']), blwrophr=float(dict_data['blwrophr']),blwr1ophr=float(dict_data['blwr1ophr']),blwr2ophr=float(dict_data['blwr2ophr']), stpophr=float(dict_data['stpophr']),stp1ophr=float(dict_data['stp1ophr']),stp2ophr=float(dict_data['stp2ophr']), stpserhr=float(dict_data['stpserhr']), stpon=float(dict_data['stpon']))

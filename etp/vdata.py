@@ -149,8 +149,11 @@ def data_parse(data):
 
             for i, name in zip(fault_indices, fault_names):
                 if l1[i] != '255' and l1[i] != '000':
-                    f = fault(site=oldsite, fname=name + "-" + fault_codes.get(l1[i], 'Unknown Fault'))
-                    f.save()
+                    try:
+                        f = fault(site=oldsite, fname=name + "-" + fault_codes.get(l1[i], 'Unknown Fault'))
+                        f.save()
+                    except:
+                        pass
 
     else:
         return data
