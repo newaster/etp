@@ -119,7 +119,7 @@
                                     <tbody>
                                         {% if post %}
 
-                                        {% for item in pr|dictsort:"tot" %}
+                                        {% for item in pr|dictsort:"dnt" reversed %}
 
                                         <tr>
                                                 <td>{{ forloop.counter }}</td>

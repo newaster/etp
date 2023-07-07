@@ -53,7 +53,7 @@
 <div class="navbar-right">
     <ul class="navbar-nav">
         
-        <li class="dropdown">
+        <li class="dropdown" data-step="12" data-intro="Click Here to for Notifications!">
             <a href="javascript:void(0);" class="dropdown-toggle" title="Notifications" data-toggle="dropdown" role="button"><i class="zmdi zmdi-notifications"></i>
                 <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
             </a>
@@ -70,8 +70,8 @@
             </ul>
         </li>
         
-        <li><a href="javascript:void(0);" class="js-right-sidebar" title="Setting"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
-        <li><a href="{% url 'logout' %}" class="mega-menu" title="Sign Out"><i class="zmdi zmdi-power"></i></a></li>
+        <li data-step="13" data-intro="Click Here to for Dashboard setting!"><a href="javascript:void(0);" class="js-right-sidebar" title="Setting"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
+        <li data-step="14" data-intro="Click Here to for Logout!"><a href="{% url 'logout' %}" class="mega-menu" title="Sign Out"><i class="zmdi zmdi-power"></i></a></li>
     </ul>
 </div>
 
@@ -80,22 +80,22 @@
 <aside id="leftsidebar" class="sidebar">
     <div class="navbar-brand">
         <button class="btn-menu ls-toggle-btn" type="button"><i class="zmdi zmdi-menu"></i></button>
-        <a href="/{{ request.user.user_addon.role }}/"><img src="{% static 'assets/images/thumbnail.png' %}" width="100" alt="Aero"><span class="m-l-10"></span></a>
+        <a href="/{{ request.user.user_addon.role }}/"><img src="{% static 'assets/images/thumbnail.png' %}" width="100%" alt="Aero"></a>
     </div>
     <div class="menu">
         <ul class="list">
             <li>
                 <div class="user-info">
-                    <a class="image" href="/profile/"><img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'assets/images/profile_av.jpg' %}{% endif %}" alt="Profile Picture" width="55px" height="55px"></a>
+                    <a class="image" href="/profile/" data-step="10" data-intro="Click Here to see your Profile!"><img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'assets/images/profile_av.jpg' %}{% endif %}" alt="Profile Picture" width="55px" height="55px"></a>
                     <div class="detail">
-                        <h4>{{ request.user.username }}</h4>
-                        <small><strong>Role:</strong> {{ request.user.user_addon.role }}</small>                        
+                        <h4>{{ request.user.username|upper }}</h4>
+                        <small><strong>Role:</strong> {{ request.user.user_addon.role|upper }}</small>                        
                     </div>
                 </div>
             </li>
-            <li class="active open"><a href="/{{ request.user.user_addon.role }}/"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
-            <li><a href="/hmi/"><i class="zmdi zmdi-account"></i><span> Live Plant Status(HMI)</span></a></li>
-            <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-apps"></i><span>Reports</span></a>
+            <li class="active open" data-step="1" data-title="Learn how to use this webiste!" data-intro="Click here for Home Page!"><a href="/{{ request.user.user_addon.role }}/"><i class="zmdi zmdi-home"></i><span>Dashboard</span></a></li>
+            <li  data-step="2" data-intro="Click Here to see HMIs"><a href="/hmi/"><i class="zmdi zmdi-portable-wifi"></i><span> Live Plant Status(HMI)</span></a></li>
+            <li data-step="3" data-intro="Click Here to see Reports"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-receipt"></i><span>Reports</span></a>
                 <ul class="ml-menu">
                     <li><a href="/plantreport/">Plant Reports</a></li>
                     <li><a href="/faultreport/">Fault Reports</a></li>                   
@@ -106,8 +106,8 @@
             
             {% endblock %}
 
-            <li><a href="javascript:void(0);">
-                <i class="zmdi zmdi-shopping-cart"></i><span>HELP!</span></a>
+            <li><a href="javascript:introJs().setOptions({ skipUndefined: true }).start();">
+                <i class="zmdi zmdi-help"></i><span>HELP!</span></a>
             </li>
             
         </ul>
@@ -120,7 +120,7 @@
 <!-- Right Sidebar -->
 <aside id="rightsidebar" class="right-sidebar">
     <ul class="nav nav-tabs sm">
-        <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#setting"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
+        <li class="nav-item" ><a class="nav-link active" data-toggle="tab" href="#setting"><i class="zmdi zmdi-settings zmdi-hc-spin"></i></a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="setting">
@@ -177,9 +177,15 @@
 
 {% endblock %}
 
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="{% static 'index.js' %}"></script>
+
+<!--Introjs-->
+<script src="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/intro.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@6.0.0/introjs.min.css">
 
 <!-- Jquery Core Js --> 
 <script src="{% static 'assets/bundles/libscripts.bundle.js' %}"></script> <!-- Lib Scripts Plugin Js ( jquery.v3.2.1, Bootstrap4 js) --> 

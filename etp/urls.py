@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('newetp', views.newetp, name='newetp'),
     path("",views.home, name="home"),
-    path('admins/',views.admin,name="admin"),
+    path('admins/',views.admin,name="admins"),
     path('guest/',views.guest,name="guest"),
     path('user/',views.user,name="user"),
     path('signup/',views.signup_call,name="signup"),
@@ -48,6 +48,7 @@ urlpatterns = [
     path('createticket/',views.createticket,name="createticket"),
     path('manageticket/',views.manageticket,name="manageticket"),
     path('editticket/<id>',views.editticket,name="editticket"),
-    path('hmi_view/',views.hmi_view)
+    path('hmi_view/',views.hmi_view),
+    path('addcredit/<id>',views.addcredit,name="addcredit")
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

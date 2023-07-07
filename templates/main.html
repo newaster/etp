@@ -25,33 +25,33 @@
 {% if request.user.user_addon.role == 'user' %}
 
 
-			<li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-assignment"></i><span>Site Setup</span></a>
+			<li data-step="4" data-intro="Click Here to setup site!"> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-store"></i><span>Site Setup</span></a>
                 <ul class="ml-menu">
                     <li><a href="/createsite/">Create Site</a></li>
                     <li><a href="/managesite/">Manage Site</a></li>
                 </ul>
 			</li>
-            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>User Setup</span></a>
+            <li data-step="5" data-intro="Click Here to setup User!"> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account-add"></i><span>User Setup</span></a>
                 <ul class="ml-menu">
                     <li><a href="/createuser/">Create User</a></li>
                     <li><a href="/manageuser/">Manage User</a></li>
                 </ul>
             </li>
-            <li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-blogger"></i><span>Zone Setup</span></a>
+            <li data-step="6" data-intro="Click Here to setup zone!"> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-gps-dot"></i><span>Zone Setup</span></a>
                 <ul class="ml-menu">
                     <li><a href="/createzone/">Create Zone</a></li>
                     <li><a href="/managezone/">Manage Zone</a></li>
                 </ul>
             </li>
-            <li><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-shopping-cart"></i><span>Tickets</span></a>
+            <li data-step="7" data-intro="Click Here to setup Tickets!"><a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-ticket-star"></i><span>Tickets</span></a>
                 <ul class="ml-menu">
                     <li><a href="/createticket/">Create Ticket</a></li>
                     <li><a href="/manageticket/">Manage Ticket</a></li>
                 </ul>
             </li>
 {% elif request.user.user_addon.role == 'admins' %}
-<li> <a href="/approval/"><i class="zmdi zmdi-folder"></i><span>Approve New User</span></a></li>
-<li> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-folder"></i><span>User Setup</span></a>
+<li data-step="8" data-intro="Click Here to Approve User!"> <a href="/approval/"><i class="zmdi zmdi-accounts-add"></i><span>Approve New User</span></a></li>
+<li data-step="9" data-intro="Click Here to Manage User!"> <a href="javascript:void(0);" class="menu-toggle"><i class="zmdi zmdi-account"></i><span>User Setup</span></a>
                 <ul class="ml-menu">
                     <li><a href="/manageuser/">Manage User</a></li>
                 </ul>
@@ -78,7 +78,7 @@
                     <div class="col">
                         
                     </div>
-                    <div class="col">
+                    <div class="col" data-step="11" data-intro="Click Here to select site and see Analysis!">
                         <form method="POST"  id="search-form">
                             {% csrf_token %}
                             <div class="row">

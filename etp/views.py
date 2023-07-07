@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime, timedelta
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
-from .models import User_addon, user_approval,etpflow,fault,site,zones,ticket,UserProfile
+from .models import User_addon, user_approval,etpflow,fault,site,zones,ticket,UserProfile,credithistory
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from .vdata import data_parse
@@ -254,11 +254,18 @@ def profile(request):
     except UserProfile.DoesNotExist:
         # If UserProfile object does not exist, create a new one
         user_profile = UserProfile(user=request.user)
+
+    if request.user.user_addon.role=='user':
+        credit=credithistory.objects.filter(usr=request.user).order_by("-dnt")
+    else:
+        credit=""
+
+
         
     if request.method=="POST":
         profile_photo = request.FILES.get('profile_picture')
 
-        print(profile_photo)
+        #print(profile_photo)
 
         if profile_photo:
             
@@ -274,7 +281,7 @@ def profile(request):
         return redirect('profile')
 
 
-    return render(request,'profile.html')
+    return render(request,'profile.html',{"credit":credit})
 
 @login_required(login_url='/')
 def hmi(request):
@@ -468,6 +475,13 @@ def createsite(request):
             s=site(user=request.user,name=sitename,smno=smno,lat=lat,lon=lon,status=status,techno=phone,techemail=email,city=city,opc=opc)
             s.save()
 
+            ruser=User_addon.objects.get(user=request.user)
+            ruser.quota=ruser.quota-1
+            ruser.save()
+
+            c=credithistory(usr=request.user,desc="Create Site : "+s.smno,status="-1")
+            c.save()
+
             html_message = render_to_string('../templates/site_notification.html', {'s': s,'u':request.user})
             mailinput=plain_message = strip_tags(html_message)
 
@@ -527,8 +541,11 @@ def renewsite(request,id):
         ruser=User_addon.objects.get(user=request.user)
         ruser.quota=ruser.quota-1
         ruser.save()
+
         rsite=site.objects.get(id=id)
 
+        c=credithistory(usr=request.user,desc="Renew Site : "+rsite.smno,status="-1")
+        c.save()
 
         rsite.ud = datetime.now()
         rsite.vd = rsite.vd + timedelta(days=365)
@@ -729,3 +746,27 @@ def editticket(request,id):
 
 
     return render(request,'createticket.html',{'faults':faultfunc(request.user),'edit':True})
+
+
+
+
+
+@login_required(login_url='/')
+def addcredit(request,id):
+
+    if request.method=="POST":
+        print("aaya")
+        json_data = json.loads(request.body)
+        t=User_addon.objects.get(id=id)
+        t.quota=json_data['quota']
+        t.save()
+
+        usr=User_addon.objects.get(id=id)
+
+        c=credithistory(usr=usr.user,desc="Purchased Credit",status="+"+json_data['quota'])
+        c.save()
+
+        return JsonResponse({'message': 'Credit Added successfully.'})
+
+
+    return redirect("admins")

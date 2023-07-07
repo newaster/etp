@@ -51,6 +51,49 @@ document.getElementById('select-picture-button').addEventListener('click', funct
 
 
 
+    function showaddcredit(itemId,csrf) {
+        // Get the description and status elements for the current item
+        var descriptionElement = document.getElementById('quota-' + itemId);
+        //console.log(descriptionElement)
+
+        // Prompt the user to enter a new description
+        var newDescription = prompt('Enter no of Credits:');
+        //console.log(newDescription)
+        if (newDescription !== null) {
+            // If the user clicked "OK" and entered a description, update the elements
+            descriptionElement.textContent = newDescription;
+
+            // Send the updated data to the server
+            var url = '/addcredit/' + itemId ;
+            var data = {
+                quota: newDescription,
+            };
+            var csrftoken = csrf
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert('Credit Added successfully.');
+            })
+            .catch(error => {
+                alert('Error occurred while adding Credit. Please try again.');
+            });
+        } else {
+            // If the user clicked "Cancel" or didn't enter a description, show a message
+            alert('Canceled.');
+        }
+    }
+
+
+
+
 
 
 
