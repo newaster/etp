@@ -84,9 +84,8 @@
                             <div class="row">
                                 <div class="col">
                                     <select class="form-control show-tick ms select2" data-placeholder="Select" name="siteid" onchange="submitForm()">
-                                        <option>Select</option>
                                         {% for i in site %}
-                                        <option value="{{ i.smno }}">{{ i.smno }}::{{i.name}}</option>
+                                        <option value="{{ i.smno }}" {% if i.smno == nsite.smno %}selected{% endif %}>{{ i.smno }}::{{i.name}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -112,6 +111,7 @@
             <div class="card mcard_4">                              
                         <div id="demo3" class="carousel slide" data-ride="carousel">            
                             <!-- Wrapper for slides -->
+                            <input type="hidden" value="{{ bardict }}" id="flowc2">
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <div id="chart-pie1" class="c3_chart"></div>
@@ -171,7 +171,7 @@
             <div>
                 
                     <div class="header">
-                        <h5><strong>PUMP</strong> FAULTS</h5>
+                        <h5><strong>PUMP</strong> Ontime</h5>
                     </div>
                     <div class="body">
                         <div id="chart-employment" class="c3_chart"></div>
@@ -284,22 +284,9 @@
             <div class="card">
                 <div class="header">
                     <h2><strong>Flow</strong> Rate</h2>
-                    <ul class="header-dropdown">
-                        <li class="dropdown"> <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="zmdi zmdi-more"></i> </a>
-                            <ul class="dropdown-menu dropdown-menu-right slideUp">
-                                <li><a href="javascript:void(0);">Edit</a></li>
-                                <li><a href="javascript:void(0);">Delete</a></li>
-                                <li><a href="javascript:void(0);">Report</a></li>
-                            </ul>
-                        </li>
-                        <li class="remove">
-                            <a role="button" class="boxs-close"><i class="zmdi zmdi-close"></i></a>
-                        </li>
-                    </ul>
                 </div>
-                <div class="body">
-                
-                    <p id="bardict3-data">{{ bardict3 }}</p>
+                <div class="body">                
+                    <input type="hidden" value="{{ bardict3 }}" id="flowc">
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                              
@@ -323,8 +310,12 @@
             <div class="col-md-12 col-lg-8">
                 <div class="card">
                     <div class="header">
-                        <h2><strong>Plant</strong>Location</h2>
+                        <h2><strong>Plant </strong>Location</h2>
                           <div class="body text-center">
+                            <input type="hidden" id="mapc1" value="{{ nsite.lat }}">
+                            <input type="hidden" id="mapc2" value="{{ nsite.lon }}">
+                            <input type="hidden" id="mapc3" value="{{ nsite.name }}">
+
                                 <div id="india" style="height: 400px"></div>
                         </div>                    
                     </div>
@@ -333,11 +324,11 @@
             <div class="col-lg-4 col-md-12">
                 <div class="card" id="plant-card">
                     <div class="header">
-                        <h2><strong>Plant Status</strong></h2>
+                        <h2>Plant<strong> Status</strong></h2>
                     </div>
                     <div class="body text-center">
                         <div id="chart-donut" class="c3_chart"></div>
-                        <button class="btn btn-primary mt-4 mb-4" onclick="flipCard()">View More</button>                            
+                        <button class="btn btn-primary mt-4 mb-4">View More</button>                            
                     </div>
                     <!--<div class="back">
                         <h2>Last Online</h2>

@@ -1,5 +1,35 @@
+
+
 $(function() {
     "use strict";
+
+
+
+var bardict3 = document.getElementById('flowc').value;
+const jsonData = JSON.parse(bardict3.replace(/'/g, "\""));
+
+//console.log(jsonData)
+
+var a = new Date(jsonData.date[0]);
+
+var today = new Date();
+
+var result1;
+var result2;
+
+if (today.toDateString() === a.toDateString()) {
+
+    console.log(today);
+    console.log(a);
+    result1 = ['data1',100];
+    result2 = ['data2', 0];
+} else {
+    result1 = ['data1',0];
+    result2 = ['data2', 100];
+}
+
+//console.log(result);
+
     setTimeout(function(){ 
         $(document).ready(function(){
             var chart = c3.generate({
@@ -7,9 +37,9 @@ $(function() {
                 data: {
                     columns: [
                         // each columns data
-                        ['data1', 2, 8, 6, 7, 14, 11],
-                        ['data2', 5, 15, 11, 15, 21, 25],
-                        ['data3', 17, 18, 21, 20, 30, 29]
+                        ['data1', jsonData.itpr[0], jsonData.itpr[1], jsonData.itpr[2], jsonData.itpr[3], jsonData.itpr[4], jsonData.itpr[5]],
+                        ['data2', jsonData.stpr[0], jsonData.stpr[1], jsonData.stpr[2], jsonData.stpr[3], jsonData.stpr[4], jsonData.stpr[5]],
+                        ['data3', jsonData.blwr[0], jsonData.blwr[1], jsonData.blwr[2], jsonData.blwr[3], jsonData.blwr[4], jsonData.blwr[5]]
                     ],
                     type: 'line', // default type of chart
                     colors: {
@@ -21,14 +51,14 @@ $(function() {
                         // name of each serie
                         'data1': 'ITP',
                         'data2': 'STP',
-                        'data3': 'FFP'
+                        'data3': 'BLOWER'
                     }
                 },
                 axis: {
                     x: {
                         type: 'category',
                         // name of each category
-                        categories: ['2013', '2014', '2015', '2016', '2019', '2018']
+                        categories: jsonData.date
                     },
                 },
                 legend: {
@@ -463,8 +493,8 @@ $(function() {
                 data: {
                     columns: [
                         // each columns data
-                        ['data1', 0],
-                        ['data2', 100]
+                        result1,
+                        result2
                     ],
                     type: 'donut', // default type of chart
                     colors: {

@@ -11,9 +11,14 @@ $(function() {
 });
 
 
-var bardict3 = document.getElementById('bardict3-data').innerHTML;
+var bardict3 = document.getElementById('flowc').value;
+const jsonData = JSON.parse(bardict3.replace(/'/g, "\""));
 
-console.log(typeof(bardict3));
+
+var a = document.getElementById('flowc2').value;
+
+var validJSON = a.replace(/'/g, "\"");
+var jso = JSON.parse(validJSON);
 
 
 function initSparkline() {
@@ -67,64 +72,26 @@ function initC3Chart() {
             });
         });
 
-/*
-$(document).ready(function(){
-            var chart = c3.generate({
-                bindto: '#chart-area-step', // id of chart wrapper
-                data: {
-                    columns: [
-                        // each columns data
-                        ['data1', bardict3["fv"][0], bardict3["fv"][1], bardict3["fv"][2], bardict3["fv"][3], bardict3["fv"][4], bardict3["fv"][5]]
-                        //['data1',10,12,13,15,8,7]
-                    ],
-                    type: 'area-step', // default type of chart
-                    colors: {
-                        'data1': Aero.colors["blue"]
-                    },
-                    names: {
-                        // name of each serie
-                        'data1': 'Inlet'
-                    }
-                },
-                axis: {
-                    x: {
-                        type: 'category',
-                        // name of each category
-                        categories: bardict3["date"]
-                        //categories:["Jan","Feb","Mar","Apr","May","Jun"]
-
-                    },
-                },
-                legend: {
-                    show: true, //hide legend
-                },
-                padding: {
-                    bottom: 0,
-                    top: 0
-                },
-            });
-        }); 
-*/
 
 $(document).ready(function(){
             var chart = c3.generate({
                 bindto: '#chart-area-step',
                 data: {
                     columns: [
-                        ['data1', bardict3.fv[0], bardict3.fv[1], bardict3.fv[2], bardict3.fv[3], bardict3.fv[4], bardict3.fv[5]]
+                        ['data1', jsonData.fv[0], jsonData.fv[1], jsonData.fv[2], jsonData.fv[3], jsonData.fv[4], jsonData.fv[5]]
                     ],
                     type: 'area-step',
                     colors: {
                         'data1': 'blue'
                     },
                     names: {
-                        'data1': 'Inlet'
+                        'data1': 'Inlet Flow Rate'
                     }
                 },
                 axis: {
                     x: {
                         type: 'category',
-                        categories: bardict3.date
+                        categories: jsonData.date
                     }
                 },
                 legend: {
@@ -145,8 +112,8 @@ $(document).ready(function(){
                 data: {
                     columns: [
                         // each columns data
-                        ['data1', 35],
-                        ['data2', 65],
+                        ['data1', jso.sum_value1/(jso.sum_value1+jso.sum_value2)],
+                        ['data2', jso.sum_value2/(jso.sum_value1+jso.sum_value2)],
                     ],
                     type: 'pie', // default type of chart
                     colors: {
@@ -176,8 +143,8 @@ $(document).ready(function(){
                 data: {
                     columns: [
                         // each columns data
-                        ['data1', 40],
-                        ['data2', 60],
+                        ['data1', jso.sum_value5/(jso.sum_value5+jso.sum_value6)],
+                        ['data2', jso.sum_value6/(jso.sum_value5+jso.sum_value6)],
                     ],
                     type: 'pie', // default type of chart
                     colors: {
@@ -207,8 +174,8 @@ $(document).ready(function(){
                 data: {
                     columns: [
                         // each columns data
-                        ['data1', 70],
-                        ['data2', 30],
+                        ['data1', jso.sum_value3/(jso.sum_value3+jso.sum_value4)],
+                        ['data2', jso.sum_value4/(jso.sum_value3+jso.sum_value4)],
                     ],
                     type: 'pie', // default type of chart
                     colors: {

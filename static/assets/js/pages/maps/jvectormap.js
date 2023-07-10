@@ -1,4 +1,12 @@
 $(function () {
+
+nsite1=document.getElementById("mapc1").value
+
+nsite2=document.getElementById("mapc2").value
+
+nsite3=document.getElementById("mapc3").value
+
+
     setTimeout(function(){
         $('#world-map-markers').vectorMap({
             map: 'world_mill_en',
@@ -50,7 +58,7 @@ $(function () {
             showTooltip: true,
             regionStyle: {
                 initial: {
-                    fill: 'rgba(210, 214, 222, 1)',
+                    fill: 'rgba(144, 238, 144, 1)',
                     "fill-opacity": 1,
                     stroke: 'none',
                     "stroke-width": 0,
@@ -72,7 +80,7 @@ $(function () {
                 }
             },
             markers: [
-                { latLng: [18.25,73.85], name: 'Pune' },
+                { latLng: [parseFloat(nsite1),parseFloat(nsite2)], name: nsite3 },
             ]
         });   
         

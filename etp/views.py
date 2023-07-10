@@ -110,6 +110,8 @@ def common_view(request, smno,s):
     result2=[0,0,0,0]
     result=[0,0,0,0]
     lates=""
+
+    newsite=site.objects.get(smno=smno)
     
     result = etpflow.objects.filter(smno=smno).aggregate(
         total1=Sum('itp1ophr'),
@@ -122,14 +124,14 @@ def common_view(request, smno,s):
         total8=Sum('blwr2ophr')
     )
     
-    bardict["sum_value1"] = result.get('total1', 0) or 0
-    bardict["sum_value2"] = result.get('total2', 0) or 0
-    bardict["sum_value3"] = result.get('total3', 0) or 0
-    bardict["sum_value4"] = result.get('total4', 0) or 0
-    bardict["sum_value5"] = result.get('total5', 0) or 0
-    bardict["sum_value6"] = result.get('total6', 0) or 0
-    bardict["sum_value7"] = result.get('total7', 0) or 0
-    bardict["sum_value8"] = result.get('total8', 0) or 0
+    bardict["sum_value1"] = int(result.get('total1', 0) or 0)
+    bardict["sum_value2"] = int(result.get('total2', 0) or 0)
+    bardict["sum_value3"] = int(result.get('total3', 0) or 0)
+    bardict["sum_value4"] = int(result.get('total4', 0) or 0)
+    bardict["sum_value5"] = int(result.get('total5', 0) or 0)
+    bardict["sum_value6"] = int(result.get('total6', 0) or 0)
+    bardict["sum_value7"] = int(result.get('total7', 0) or 0)
+    bardict["sum_value8"] = int(result.get('total8', 0) or 0)
 
     result2 = etpflow.objects.filter(smno=smno).order_by('-dnt')[:7]
     bardict2["itp1ophr"] = [int(i.itp1ophr) / 10 for i in result2]
@@ -141,13 +143,17 @@ def common_view(request, smno,s):
     bardict2["stp1ophr"] = [int(i.stp1ophr) / 10 for i in result2]
     bardict2["stp2ophr"] = [int(i.stp2ophr) / 10 for i in result2]
 
-    #bardict3["itp1"]=( bardict["sum_value1"] /(bardict["sum_value1"]+ bardict["sum_value2"]) )*100
+    
 
     result3 = etpflow.objects.filter(smno=smno).order_by('-dnt')[:6]
+
     bardict3["fv"]=[int(i.flowvalue) for i in result3]
     bardict3["date"]=[str(i.dnt)[:10]  for i in result3]
+    bardict3["itpr"]=[int(i.itpr) for i in result3]
+    bardict3["blwr"]=[int(i.blwrr) for i in result3]
+    bardict3["stpr"]=[int(i.stpr) for i in result3]
 
-    print(bardict3)
+    #print(bardict3)
 
 
     if result2:
@@ -156,7 +162,7 @@ def common_view(request, smno,s):
         else:
             lates=""
     
-    return render(request, 'main.html', {'faults': faultfunc(request.user), 'site': s, 'bardict': bardict, 'bardict2': bardict2, 'bardict3':bardict3, 'latest':lates})
+    return render(request, 'main.html', {'faults': faultfunc(request.user), 'site': s, 'bardict': bardict, 'bardict2': bardict2, 'bardict3':bardict3, 'latest':lates, 'nsite':newsite})
 
 @login_required(login_url='/')
 def admin(request):
