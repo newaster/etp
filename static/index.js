@@ -1,3 +1,6 @@
+
+
+
 document.getElementById('select-picture-button').addEventListener('click', function() {
     document.getElementById('profile-picture').click();
   });
@@ -149,6 +152,9 @@ document.getElementById('select-picture-button').addEventListener('click', funct
 
     // Trigger the PDF generation when a button is clicked
     document.getElementById('generateButton').addEventListener('click', generatePDF);
+
+
+
 
 
  

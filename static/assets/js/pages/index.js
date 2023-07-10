@@ -10,6 +10,12 @@ $(function() {
     initC3Chart();    
 });
 
+
+var bardict3 = document.getElementById('bardict3-data').innerHTML;
+
+console.log(typeof(bardict3));
+
+
 function initSparkline() {
     $(".sparkline").each(function() {
         var $this = $(this);
@@ -59,7 +65,80 @@ function initC3Chart() {
                     top: 0,
                 },
             });
-        });    
+        });
+
+/*
+$(document).ready(function(){
+            var chart = c3.generate({
+                bindto: '#chart-area-step', // id of chart wrapper
+                data: {
+                    columns: [
+                        // each columns data
+                        ['data1', bardict3["fv"][0], bardict3["fv"][1], bardict3["fv"][2], bardict3["fv"][3], bardict3["fv"][4], bardict3["fv"][5]]
+                        //['data1',10,12,13,15,8,7]
+                    ],
+                    type: 'area-step', // default type of chart
+                    colors: {
+                        'data1': Aero.colors["blue"]
+                    },
+                    names: {
+                        // name of each serie
+                        'data1': 'Inlet'
+                    }
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        // name of each category
+                        categories: bardict3["date"]
+                        //categories:["Jan","Feb","Mar","Apr","May","Jun"]
+
+                    },
+                },
+                legend: {
+                    show: true, //hide legend
+                },
+                padding: {
+                    bottom: 0,
+                    top: 0
+                },
+            });
+        }); 
+*/
+
+$(document).ready(function(){
+            var chart = c3.generate({
+                bindto: '#chart-area-step',
+                data: {
+                    columns: [
+                        ['data1', bardict3.fv[0], bardict3.fv[1], bardict3.fv[2], bardict3.fv[3], bardict3.fv[4], bardict3.fv[5]]
+                    ],
+                    type: 'area-step',
+                    colors: {
+                        'data1': 'blue'
+                    },
+                    names: {
+                        'data1': 'Inlet'
+                    }
+                },
+                axis: {
+                    x: {
+                        type: 'category',
+                        categories: bardict3.date
+                    }
+                },
+                legend: {
+                    show: true
+                },
+                padding: {
+                    bottom: 0,
+                    top: 0
+                }
+            });
+        });
+
+
+
         $(document).ready(function(){
             var chart = c3.generate({
                 bindto: '#chart-pie1', // id of chart wrapper
@@ -153,42 +232,6 @@ function initC3Chart() {
                 },
             });
         });
-        $(document).ready(function(){
-            var chart = c3.generate({
-                bindto: '#chart-area-step', // id of chart wrapper
-                data: {
-                    columns: [
-                        // each columns data
-                        ['data1', 11, 8, 15, 7, 11, 13],
-                        ['data2', 7, 7, 5, 7, 9, 12]
-                    ],
-                    type: 'area-step', // default type of chart
-                    colors: {
-                        'data1': Aero.colors["pink"],
-                        'data2': Aero.colors["orange"]
-                    },
-                    names: {
-                        // name of each serie
-                        'data1': 'Today',
-                        'data2': 'month'
-                    }
-                },
-                axis: {
-                    x: {
-                        type: 'category',
-                        // name of each category
-                        categories: ['1', '2', '3', '4', '5', '6']
-                    },
-                },
-                legend: {
-                    show: true, //hide legend
-                },
-                padding: {
-                    bottom: 0,
-                    top: 0
-                },
-            });
-        });
 }, 500);
 }
 setTimeout(function(){
@@ -226,7 +269,7 @@ setTimeout(function(){
                 },
         
             markers : [{
-                latLng : [21.00, 78.00],
+                latLng : [26.76, 83.37],
                 name : 'INDIA : 350'
             
             },

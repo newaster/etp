@@ -42,7 +42,6 @@ def viewpolish(request):
 
 def faultfunc(user):
     faults = fault.objects.filter(site__user=user).order_by('-dnt')[:6]
-
     return faults
 
 
@@ -55,7 +54,7 @@ def newetp(request):
     if request.method == 'POST':
         nd= request.POST.get('Data')
         with open('etpraw.txt', 'a') as fp:
-            fp.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} -- {dict_data}\n")
+            fp.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} -- {nd}\n")
 
         if nd[-1]=='e':
             dict_data=nd
@@ -144,13 +143,20 @@ def common_view(request, smno,s):
 
     #bardict3["itp1"]=( bardict["sum_value1"] /(bardict["sum_value1"]+ bardict["sum_value2"]) )*100
 
+    result3 = etpflow.objects.filter(smno=smno).order_by('-dnt')[:6]
+    bardict3["fv"]=[int(i.flowvalue) for i in result3]
+    bardict3["date"]=[str(i.dnt)[:10]  for i in result3]
+
+    print(bardict3)
+
+
     if result2:
         if len(result2)>0:
             lates=result2[0]
         else:
             lates=""
     
-    return render(request, 'main.html', {'faults': faultfunc(request.user), 'site': s, 'bardict': bardict, 'bardict2': bardict2, 'latest':lates})
+    return render(request, 'main.html', {'faults': faultfunc(request.user), 'site': s, 'bardict': bardict, 'bardict2': bardict2, 'bardict3':bardict3, 'latest':lates})
 
 @login_required(login_url='/')
 def admin(request):
@@ -302,14 +308,62 @@ def profile(request):
 
 @login_required(login_url='/')
 def hmi(request):
-    latest_etp_flow = etpflow.objects.filter(smno='9100000011').latest('id')
+    if request.user.user_addon.role=="admins":
+        s=site.objects.all()
+        try:
+            latest_etp_flow = etpflow.objects.filter(smno=s[0].smno).latest('id')
+        except:
+            latest_etp_flow=""
+        nsmno=s[0].smno
+        #print(latest_etp_flow)
+
+    elif request.user.user_addon.role=="user":
+
+        s=site.objects.filter(user=request.user)
+        try:
+            latest_etp_flow = etpflow.objects.filter(smno=s[0].smno).latest('id')
+        except:
+            latest_etp_flow=""
+        nsmno=s[0].smno
+
+    elif request.user.user_addon.role=="guest":
+        siteallocated = []
+        noofzone = User_addon.objects.get(user=request.user).azones
+        if noofzone != "":
+            try:
+                si = ast.literal_eval(zones.objects.get(zname=noofzone).zid)
+
+                for i in si:
+                    newsite = site.objects.get(smno=i[:10])
+                    siteallocated.append(newsite)
+
+            except:
+                return HttpResponse("<script>alert('Zone Not Assigned');window.location.assign('/guest/');</script>")
+
+        s = siteallocated
+        try:
+            latest_etp_flow = etpflow.objects.filter(smno=s[0].smno).latest('id')
+        except:
+            latest_etp_flow=""
+        nsmno=s[0].smno
+
+    if request.method == 'POST':
+        nsmno = request.POST['siteid']
+        try:
+            latest_etp_flow = etpflow.objects.filter(smno=nsmno).latest('id')
+        except:
+            latest_etp_flow=""
+
+
     
-    return render(request,'hmi.html',{'etp_flow': latest_etp_flow})
+    return render(request,'hmi.html',{'etp_flow': latest_etp_flow,'site':s,'nsmno':nsmno})
 
 @login_required(login_url='/')
-def hmi_view(request):
+def hmi_view(request,id):
 
-    latest_etp_flow = etpflow.objects.filter(smno='9100000011').latest('id')
+    print(id)   
+
+    latest_etp_flow = etpflow.objects.filter(smno=id).latest('id')
 
     # Prepare the data to be returned
     data = {
@@ -319,6 +373,8 @@ def hmi_view(request):
         'pos': latest_etp_flow.pos,
         'nop': latest_etp_flow.nop,
     }
+
+    #print(data)
 
     return JsonResponse(data)
 
@@ -772,7 +828,7 @@ def editticket(request,id):
 def addcredit(request,id):
 
     if request.method=="POST":
-        print("aaya")
+        #print("aaya")
         json_data = json.loads(request.body)
         t=User_addon.objects.get(id=id)
         t.quota=json_data['quota']

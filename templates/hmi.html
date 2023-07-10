@@ -1,309 +1,174 @@
 {% extends 'main.html' %}
 {% load static %}
-{% block maincontent %}
 
+{% block maincontent %}
 <section class="content">
-	<div class="body_scroll">
+    <div class="body_scroll">
         <div class="block-header">
             <div class="row">
                 <div class="col-lg-7 col-md-6 col-sm-12">
                     <h2>LIVE PLANT STATUS</h2>
-           
-                    <button class="btn btn-primary btn-icon mobile_menu" type="button"><i class="zmdi zmdi-sort-amount-desc"></i></button>
+                    <button class="btn btn-primary btn-icon mobile_menu" type="button">
+                        <i class="zmdi zmdi-sort-amount-desc"></i>
+                    </button>
                 </div>
-                <div class="col-lg-5 col-md-6 col-sm-12">                
-                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button"><i class="zmdi zmdi-arrow-right"></i></button>
-           
+                <div class="col-lg-5 col-md-6 col-sm-12">
+                    <button class="btn btn-primary btn-icon float-right right_icon_toggle_btn" type="button">
+                        <i class="zmdi zmdi-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-{% if request.user.user_addon.role != 'guest' %}
+        {% if request.user.user_addon.role != 'guest' %}
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>Select</strong> Site</h2>
+                        <br>
+                        <div class="body">
+                            <div class="col">
+                                <form method="POST" id="search-form">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <select class="form-control show-tick ms select2" data-placeholder="Select"
+                                                name="siteid" id="siteid" onchange="submitForm()">
+                                                {% for i in site %}
+                                                <option value="{{ i.smno }}" {% if i.smno == nsmno %}selected{% endif %}>{{ i.smno }}::{{i.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
+        <script type="text/javascript">
+            function submitForm() {
+                            document.getElementById("search-form").submit();
+                        }
+        </script>
 
-<div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2> <strong>Select</strong> Site</h2>
-                            <br>
-								<div class="bod">
-        						<div class="row clearfix">
-                                <div class="col-sm-6">                                    
-                                    <select class="form-control show-tick ms select2" data-placeholder="Select">
-                                        <option>Select</option>
-                                        <option>Mustard</option>
-                                        <option>Ketchup</option>
-                                        <option>Relish</option>
-                                    </select>
-                                </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                function updateUI(data) {
+                    if (data.hasOwnProperty('ob') && data.hasOwnProperty('etp')) {
+                        updateBinaryValue('ob', data.ob);
+                        updateBinaryValue('etp', data.etp);
+                    }
+                }
 
-                                <div col-sm-3>
-                                	<input type="submit" value="Search" class="btn btn-info">
-                                </div>
+                function updateBinaryValue(valueName, binaryValue) {
+                    var bitsContainer = $('#' + valueName + '-bits-container');
+                    if (bitsContainer.length > 0) {
+                        var bits = bitsContainer.find('.bit');
+                        if (bits.length === binaryValue.length) {
+                            bits.each(function (index) {
+                                updateBit($(this), binaryValue.charAt(index));
+                            });
+                        }
+                    }
+                }
 
-                                <div col-sm-3>
-                                	<button class="btn btn-danger">MORE</button>
-                                </div>
-        				</div>
-					</div>
-				</div>
-			</div>
-		</div>
-</div>
+                function updateBit(element, bitValue) {
+                    if (bitValue === '1') {
+                        element.css('background-color', 'green');
+                    } else {
+                        element.css('background-color', 'red');
+                    }
+                }
 
-{% endif %}
+                function fetchETPFlow() {
+                    var selectedValue = document.getElementById("siteid").value || document.getElementById("siteid").options[0].value;
 
-<!---------------------------------------------------------------------------------------------------------------->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-    // Function to update the UI for each bit
-    function updateUI(data) {
-        if (data.hasOwnProperty('ib') && data.hasOwnProperty('ob') &&
-            data.hasOwnProperty('etp') && data.hasOwnProperty('pos') &&
-            data.hasOwnProperty('nop')) {
-            
-            // Update the UI elements for each bit
-            updateBinaryValue('ib', data.ib);
-            updateBinaryValue('ob', data.ob);
-            updateBinaryValue('etp', data.etp);
-            updateBinaryValue('pos', data.pos);
-            updateBinaryValue('nop', data.nop);
-        }
+                    console.log(selectedValue)
 
-    }
+                    $.ajax({
+                        url: '/hmi_view/'+selectedValue,
+                        method: 'GET',
+                        success: function (data) {
+                            updateUI(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error:', error);
+                        }
+                    });
+                }
 
-    // Function to update a single binary value
-    function updateBinaryValue(valueName, binaryValue) {
-        var bitsContainer = $('#' + valueName + '-bits-container');
-        if (bitsContainer.length > 0) {
-            var bits = bitsContainer.find('.bit');
-            if (bits.length === binaryValue.length) {
-                bits.each(function(index) {
-                        updateBit($(this), binaryValue.charAt(index));
-                });
+                fetchETPFlow();
+
+                setInterval(fetchETPFlow, 5000);
+            });
+        </script>
+
+        <style>
+            .bit-container {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
             }
-        }
-    }
 
-    // Function to update a single bit element
-    function updateBit(element, bitValue) {
-        if (bitValue === '1') {
-            element.css('background-color', 'green');  // Set color for bit 1
-        } else {
-            element.css('background-color', 'red');  // Set color for bit 0
-        }
-    }
-
-    // Function to fetch the latest ETP Flow data from the backend
-    function fetchETPFlow() {
-        $.ajax({
-            url: '/hmi_view',  // Replace with your Django view URL
-            method: 'GET',
-            success: function (data) {
-                updateUI(data);
-            },
-            error: function (xhr, status, error) {
-                console.log('Error:', error);  // Log the error message
+            .bit {
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+                margin-bottom: 8px;
+                margin-left: 5px;
             }
-        });
-    }
 
-    // Fetch the initial ETP Flow data on page load
-    fetchETPFlow();
+            .bit-label {
+                margin-right: 10px;
+                margin-left: 30px;
+            }
 
-    // Set an interval to fetch the latest data every few seconds (e.g., 5 seconds)
-    setInterval(fetchETPFlow, 5000);
-});
+            @media (max-width: 576px) {
+                .bit-label {
+                    margin-right: 0;
+                    margin-bottom: 5px;
+                    margin-left: 0;
+                }
+            }
+        </style>
 
-    </script>
+        <div id="etp-bits-container" class="bit-container">
+            <h5 class="bit-label">AUTO/MANUAL</h5>
+            <span class="bit" id="etp-bit-1"></span>
 
-<!-- 
-
-    <style>
-        .bit {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-        }
-    </style>
-
-    <h1>ETP Flow</h1>
-    
-  
-    <h2>IB:</h2>
-    <div id="ib-bits-container">
-        <span class="bit" id="ib-bit-7"></span>
-        <span class="bit" id="ib-bit-6"></span>
-        <span class="bit" id="ib-bit-5"></span>
-        <span class="bit" id="ib-bit-4"></span>
-        <span class="bit" id="ib-bit-3"></span>
-        <span class="bit" id="ib-bit-2"></span>
-        <span class="bit" id="ib-bit-1"></span>
-        <span class="bit" id="ib-bit-0"></span>
-    </div>
-    
-    <h2>OB:</h2>
-    <div id="ob-bits-container">
-        <span class="bit" id="ob-bit-7"></span>
-        <span class="bit" id="ob-bit-6"></span>
-        <span class="bit" id="ob-bit-5"></span>
-        <span class="bit" id="ob-bit-4"></span>
-        <span class="bit" id="ob-bit-3"></span>
-        <span class="bit" id="ob-bit-2"></span>
-        <span class="bit" id="ob-bit-1"></span>
-        <span class="bit" id="ob-bit-0"></span>
-    </div>
-    
-    <h2>ETP:</h2>
-    <div id="etp-bits-container">
-        <span class="bit" id="etp-bit-1"></span>
-        <span class="bit" id="etp-bit-0"></span>
-    </div>
-    
-    <h2>POS:</h2>
-    <div id="pos-bits-container">
-        <span class="bit" id="pos-bit-7"></span>
-        <span class="bit" id="pos-bit-6"></span>
-        <span class="bit" id="pos-bit-5"></span>
-        <span class="bit" id="pos-bit-4"></span>
-        <span class="bit" id="pos-bit-3"></span>
-        <span class="bit" id="pos-bit-2"></span>
-        <span class="bit" id="pos-bit-1"></span>
-        <span class="bit" id="pos-bit-0"></span>
-    </div>
-    
-    <h2>NOP:</h2>
-    <div id="nop-bits-container">
-        <span class="bit" id="nop-bit-7"></span>
-        <span class="bit" id="nop-bit-6"></span>
-        <span class="bit" id="nop-bit-5"></span>
-        <span class="bit" id="nop-bit-4"></span>
-        <span class="bit" id="nop-bit-3"></span>
-        <span class="bit" id="nop-bit-2"></span>
-        <span class="bit" id="nop-bit-1"></span>
-        <span class="bit" id="nop-bit-0"></span>
-    </div>
-
--->
-<link rel="stylesheet" href="{% static 'hmi/index.css' %}">
-<div width="100%">
-    
-        <div class="line"></div>
-
-    <div class="tank">
-        <div class="base"></div>
-         <h2>Equalization Tank</h3>
-    </div>
-    
-
-    <div class="tank2">
-        <div class="base2"></div>
-        <h2>Collection Tank</h2>
-    </div>
-
-    <div class="tank3">
-        <div class="base3"></div>
-    </div>
-
-    <div class="beaker-tank">
-        
-        <div class="beaker-body">   
-        </div>
-        <div class="beaker-base" ><h2>Settling Tank</h2>
-        </div>
-    
-      </div>
-      
-
-    
-    <div class="fan1">
-  <div id="line1"></div>
-  <div id="line2"></div>
-    </div>
-
-
-        <div class="fan2">
-            <div id="line3"></div>
-            <div id="line4"></div>
+            <h5 class="bit-label">RECIRC/TFR</h5>
+            <span class="bit" id="etp-bit-0"></span>
         </div>
 
+        <div>
+            <img src="{% static 'assets/hmi.png' %}" width="100%" alt="HMI">
+        </div>
 
-        <div class="pipe1"></div>
-        <div class="pipe2"></div>
-        <div class="pipe3"></div>
-        <div class="pipe4"></div>
-        <div class="pipe5"></div>
-        <div class="pipe6"></div>
-        <div class="pipe7"></div>
-        <div class="pipe8"></div>
-        <div class="pipe9"></div>
-        <div class="pipe10"></div>
-        <div class="pipe11"></div>
-        <div class="pipe12"></div>
-        <div class="pipe13"></div>
-        <div class="pipe14"></div>
-        
-
-        <svg class="curve"  viewBox="0 0 400 200">
-            <path d="M59 300 C100 0 300 20 350 100" />
-          </svg>
-
-
-          <div class="motor1"></div>
-
-          <div class="motor2"></div>
-
-          <div class="pipe15"></div>
-
-          <div class="pipe16"></div>
-
-          <div class="motor3"></div>
-
-          <div class="motor4"></div>
-
-          <div class="pipe17"></div>
-
-          <div class="pipe18"></div>
-
-          <div class="pipe19"></div>
-
-          <div class="pipe20"></div>
-
-         <div class="pipe21"></div>
-
-         <div class="motor5"></div>
-
-
-         <div class="motor6"></div>
-
-         <div class="pipe22"></div>
-
-         <div class="pipe23"></div>
-
-         <div class="pipe24"></div>
-         
-         <div class="pipe25"></div>
-
-
-
-         <div class="rectangle1-box">11</div>
-         <div class="rectangle2-box"></div>
-         <div class="rectangle3-box"></div>
-         <div class="rectangle4-box"></div>
-
-
-
-
-    <link rel="stylesheet" href="{% static 'hmi/index.js' %}">
-</div>
-
-<!---------------------------------------------------------------------------------------------------------------->
-        
-    </div> 
-	
+        <div id="ob-bits-container" class="bit-container">
+            <h5 class="bit-label">ITP 1</h5>
+            <span class="bit" id="ob-bit-0"></span>
+            <h5 class="bit-label">FFP 1</h5>
+            <span class="bit" id="ob-bit-1"></span>
+            <h5 class="bit-label">BLOWER 1</h5>
+            <span class="bit" id="ob-bit-2"></span>
+            <h5 class="bit-label">STP 1</h5>
+            <span class="bit" id="ob-bit-3"></span>
+            <h5 class="bit-label">ITP 2</h5>
+            <span class="bit" id="ob-bit-4"></span>
+            <h5 class="bit-label">FFP 2</h5>
+            <span class="bit" id="ob-bit-5"></span>
+            <h5 class="bit-label">BLOWER 2</h5>
+            <span class="bit" id="ob-bit-6"></span>
+            <h5 class="bit-label">STP 2</h5>
+            <span class="bit" id="ob-bit-7"></span>
+        </div>
+    </div>
 </section>
-
 {% endblock %}

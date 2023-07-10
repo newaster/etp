@@ -48,7 +48,7 @@ urlpatterns = [
     path('createticket/',views.createticket,name="createticket"),
     path('manageticket/',views.manageticket,name="manageticket"),
     path('editticket/<id>',views.editticket,name="editticket"),
-    path('hmi_view/',views.hmi_view),
+    path('hmi_view/<id>',views.hmi_view),
     path('addcredit/<id>',views.addcredit,name="addcredit"),
     path('readraw/',views.viewraw),
     path('readfinal/',views.viewpolish)
