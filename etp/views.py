@@ -367,7 +367,7 @@ def hmi(request):
 @login_required(login_url='/')
 def hmi_view(request,id):
 
-    print(id)   
+    #print(id)   
 
     latest_etp_flow = etpflow.objects.filter(smno=id).latest('id')
 
