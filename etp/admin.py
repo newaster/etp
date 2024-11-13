@@ -3,6 +3,8 @@ from .models import User_addon,user_approval,fault,site,ticket,zones,etpflow,Use
 
 
 
+
+
 admin.site.register(User_addon)
 
 admin.site.register(user_approval)
@@ -24,6 +26,7 @@ class SiteAdmin(admin.ModelAdmin):
 
 
 admin.site.register(site,SiteAdmin)
+
 
 
 

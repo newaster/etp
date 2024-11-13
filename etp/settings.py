@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'etp.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -87,6 +87,23 @@ DATABASES = {
         'TIME_ZONE': 'Asia/Kolkata'
     }
 }
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dbetp',          # Name of the database
+        'USER': 'dbetp',        # MySQL username
+        'PASSWORD': 'Etp@23db',    # MySQL password
+        'HOST': 'embarkrms.in',                  # Host where your MySQL server is running
+        'PORT': '3306',                       # Port to connect to MySQL
+        'OPTIONS': {
+            'charset': 'utf8mb4',             # Use utf8mb4 for proper Unicode support
+        }
+    }
+}
+
+
+
 
 
 #Email setting

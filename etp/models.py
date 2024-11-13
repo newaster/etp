@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils import timezone
 
+from django_db_views.db_view import DBView
+
 
 class User_addon(models.Model):
 	def __str__(self):
@@ -176,6 +178,73 @@ class credithistory(models.Model):
 	dnt=models.DateTimeField(auto_now_add=True)
 	desc=models.CharField(max_length=50)
 	status=models.CharField(max_length=15)
+
+
+
+######################################Views##########################################################
+
+
+class DailyView(models.Model):
+    smno = models.CharField(max_length=25)
+    date = models.DateField()
+    flow = models.DecimalField(max_digits=15, decimal_places=2)
+    tot = models.DecimalField(max_digits=15, decimal_places=2)
+    itpc = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpc = models.DecimalField(max_digits=15, decimal_places=2)
+    bwlrc = models.DecimalField(max_digits=15, decimal_places=2)
+    stpc = models.DecimalField(max_digits=15, decimal_places=2)
+    nobkwsh= models.DecimalField(max_digits=15, decimal_places=2)
+    itpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    blwrophr = models.DecimalField(max_digits=15, decimal_places=2)
+    stpophr = models.DecimalField(max_digits=15, decimal_places=2)
+
+    class Meta:
+        managed = False  
+
+class MonthlyView(models.Model):
+    smno = models.CharField(max_length=25)
+    month = models.DateField()
+    flow = models.DecimalField(max_digits=15, decimal_places=2)
+    tot = models.DecimalField(max_digits=15, decimal_places=2)
+    itpc = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpc = models.DecimalField(max_digits=15, decimal_places=2)
+    bwlrc = models.DecimalField(max_digits=15, decimal_places=2)
+    stpc = models.DecimalField(max_digits=15, decimal_places=2)
+    nobkwsh= models.DecimalField(max_digits=15, decimal_places=2)
+    itpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    blwrophr = models.DecimalField(max_digits=15, decimal_places=2)
+    stpophr = models.DecimalField(max_digits=15, decimal_places=2)
+
+    class Meta:
+        managed = False
+
+class YearlyView(models.Model):
+    smno = models.CharField(max_length=25)
+    year = models.DateField()
+    flow = models.DecimalField(max_digits=15, decimal_places=2)
+    tot = models.DecimalField(max_digits=15, decimal_places=2)
+    itpc = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpc = models.DecimalField(max_digits=15, decimal_places=2)
+    bwlrc = models.DecimalField(max_digits=15, decimal_places=2)
+    stpc = models.DecimalField(max_digits=15, decimal_places=2)
+    nobkwsh= models.DecimalField(max_digits=15, decimal_places=2)
+    itpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    ffpophr = models.DecimalField(max_digits=15, decimal_places=2)
+    blwrophr = models.DecimalField(max_digits=15, decimal_places=2)
+    stpophr = models.DecimalField(max_digits=15, decimal_places=2)
+
+    class Meta:
+        managed = False
+
+ 
+
+
+
+
+
+
 
 
 
